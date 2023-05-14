@@ -1,0 +1,40 @@
+def has_left_recursion(rule):
+    left, right=rule.split('->')
+    alternatives=right.split('|')
+    for alt in alternatives:
+        if alt.startswith(left):
+            return True
+    return False
+
+
+def eliminate_left_recursion(rule):
+    left, right=rule.split('->')
+    alternatives=right.split('|')
+    recursive=[]
+    non_recursive=[]
+    for alt in alternatives:
+        if alt.startswith(left):
+            recursive.append(alt[len(left):])
+        else:
+            non_recursive.append(alt)
+    if not recursive:
+        return rule
+    new_symbol=left+"'"
+    new_rule1=left+'->'+'|'.join([alt+new_symbol for alt in non_recursive])
+    new_rule2=new_symbol+'->'+'|'.join([alt+new_symbol for alt in recursive])+'|ε'
+    return (new_rule1, new_rule2)
+
+
+grammar=[
+    'A->Aa|b',
+    'B->Bc|d',
+    'C->Ca|Cb|c',
+    'D->aD|b'
+    ]
+for rule in grammar:
+    if has_left_recursion(rule):
+        new_rules=eliminate_left_recursion(rule)
+        print(new_rules[0])
+        print(new_rules[1])
+    else:
+        print(rule)

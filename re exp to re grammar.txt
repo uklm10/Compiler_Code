@@ -1,0 +1,22 @@
+import re
+
+
+def regex_to_grammar(regex):
+    regex = regex + "#"
+    regex = re.sub(r'\*', "X", regex)
+    grammar = "S -> " + regex + "\n"
+    grammar += "S -> " + regex[0] + "S\n"
+    for i in range(1, len(regex)):
+        grammar += "S -> " + regex[i] + "S"
+        if regex[i] not in "*()|#" and regex[i-1] not in "|(":
+            grammar += "|" + regex[i-1] + "\n"
+        else:
+            grammar += "\n"
+    grammar += "X -> epsilon"
+    return grammar
+
+
+regex = input("Enter a regular expression: ")
+grammar = regex_to_grammar(regex)
+with open("regular_grammar.txt", "w") as file:
+    file.write(grammar)

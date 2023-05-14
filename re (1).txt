@@ -1,0 +1,39 @@
+'''import re
+
+pattern = r'(0|1)*|0*1*'
+
+test_strings = ['011010', '000111', '111000', '101010']
+
+for test_string in test_strings:
+    if re.fullmatch(pattern, test_string):
+        print(f"{test_string} matches the regular expression.")
+    else:
+        print(f"{test_string} does not match the regular expression.")'''
+
+
+
+'''import re
+
+pattern = r'(ab*c|(def)+|a*d+e)+'
+
+test_strings = ['abc', 'def', 'adde', 'abcdef', 'adef']
+
+for test_string in test_strings:
+    if re.fullmatch(pattern, test_string):
+        print(f"{test_string} matches the regular expression.")
+    else:
+        print(f"{test_string} does not match the regular expression.")'''
+
+
+
+'''import re
+
+pattern = r'((a|b)*(c|d)*)+|ab*c*d'
+
+test_strings = ['ac', 'bd', 'abcd', 'abccd']
+
+for test_string in test_strings:
+    if re.fullmatch(pattern, test_string):
+        print(f"{test_string} matches the regular expression.")
+    else:
+        print(f"{test_string} does not match the regular expression.")'''

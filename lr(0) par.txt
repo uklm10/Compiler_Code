@@ -1,0 +1,52 @@
+grammar = {
+    ('S', ('(', 'S', ')')),
+    ('S', ('i',)),
+}
+terminals = {'(', ')', 'i', '$'}
+states = [
+    {('S', ('.', '(', 'S', ')'))},
+    {('S', ('(', '.', 'S', ')')), ('S', ('.', 'i'))},
+    {('S', ('(', 'S', '.', ')'))},
+]
+transitions = {
+    (0, '('): 1,
+    (1, 'S'): 2,
+    (2, ')'): 3,
+    (2, ','): 4,
+}
+ACTION = {
+    0: {'(': 'S1'},
+    1: {'(': 'S1', 'i': 'S2'},
+    2: {')': 'S3', '$': 'accept'},
+}
+GOTO = {
+    0: {'S': 1},
+    1: {'S': 2},
+}
+input_str = ['i', '(', 'i', ',', 'i', ')', '$']
+stack = [0]
+input_index = 0
+while True:
+    state = stack[-1]
+    symbol = input_str[input_index]
+    action_value = ACTION[state].get(symbol)
+    if action_value and action_value[0] == 'S':
+        next_state = int(action_value[1:])
+        stack.append(symbol)
+        stack.append(next_state)
+        input_index += 1
+    elif action_value and action_value[0] == 'R':
+        production = grammar[int(action_value[1:])]
+        lhs, rhs = production
+        for _ in range(len(rhs)):
+            stack.pop()
+            stack.pop()
+        next_state = GOTO[stack[-1]].get(lhs)
+        stack.append(lhs)
+        stack.append(next_state)
+    elif action_value == 'error':
+        print('Parsing error: unable to match input symbol with stack symbol.')
+        break
+    else:
+        print('Valid')
+        break

@@ -1,0 +1,35 @@
+class ShiftReduceParser:
+    def __init__(self, grammar):
+        self.grammar = grammar
+        self.stack = []
+        self.input = []
+
+    def parse(self, input):
+        self.input = list(input)
+        self.stack = []
+        while len(self.input) > 0:
+            action = self.shift()
+            while action != None:
+                action = self.reduce()
+        return self.stack[0]
+
+    def shift(self):
+        if len(self.input) > 0:
+            next_input = self.input.pop(0)
+            self.stack.append(next_input)
+            return True
+        return None
+
+    def reduce(self):
+        for rule in self.grammar:
+            if "".join(self.stack[-len(rule[1]):]) == rule[1]:
+                for i in range(len(rule[1])):
+                    self.stack.pop()
+                self.stack.append(rule[0])
+                return True
+        return None
+
+
+grammar = [('E', 'E+T'), ('E', 'T'), ('T', 'T*F'), ('T', 'F'), ('F', 'id')]
+parser = ShiftReduceParser(grammar)
+print(parser.parse('id+id*id'))

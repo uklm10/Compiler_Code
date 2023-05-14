@@ -1,0 +1,33 @@
+import operator
+import re
+
+
+class Calculator:
+    def __init__(self):
+        self.operators = {
+            "+": operator.add,
+            "-": operator.sub,
+            "*": operator.mul,
+            "/": operator.truediv,
+            "^": operator.pow,
+        }
+        self.pattern = re.compile(r"\d+|\+|\-|\*|\/|\^")
+
+    def calculate(self, formula):
+        tokens = self.pattern.findall(formula)
+        return self._calculate(tokens)
+
+    def _calculate(self, tokens):
+        if len(tokens) == 1:
+            return float(tokens[0])
+        for op in ["^", "*", "/", "+", "-"]:
+            for i in range(len(tokens)):
+                if tokens[i] == op:
+                    left = self._calculate(tokens[:i])
+                    right = self._calculate(tokens[i + 1:])
+                    return self.operators[op](left, right)
+
+
+if __name__ == "__main__":
+    calculator = Calculator()
+    print(calculator.calculate("(2+3)*4/5"))
